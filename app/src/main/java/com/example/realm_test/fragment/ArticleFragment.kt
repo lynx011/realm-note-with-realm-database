@@ -61,11 +61,18 @@ class ArticleFragment : Fragment() {
             val etTitle = binding.etTitle.text
             val etDesc = binding.etDesc.text
             if (etTitle!!.isNotEmpty() || etDesc!!.isNotEmpty()) {
-                realmViewModel.addArticle(title = etTitle.toString(), desc = etDesc.toString())
-                realmViewModel.getArticle()
-                Toast.makeText(requireContext(), "Successfully Saved", Toast.LENGTH_SHORT).show()
-                binding.etTitle.text!!.clear()
-                binding.etDesc.text!!.clear()
+                if (etTitle.isNotEmpty() && etDesc!!.isNotEmpty()) {
+                    realmViewModel.addArticle(title = etTitle.toString(), desc = etDesc.toString())
+                    realmViewModel.getArticle()
+                    Toast.makeText(requireContext(), "Successfully Saved", Toast.LENGTH_SHORT)
+                        .show()
+                    binding.etTitle.text!!.clear()
+                    binding.etDesc.text!!.clear()
+
+                } else {
+                    Toast.makeText(requireContext(), "fields are required", Toast.LENGTH_SHORT)
+                        .show()
+                }
             } else {
                 Toast.makeText(requireContext(), "fields are required", Toast.LENGTH_SHORT).show()
             }
