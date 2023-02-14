@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -50,7 +51,7 @@ class ArticleFragment : Fragment() {
         realmViewModel = ViewModelProvider(this)[RealmViewModel::class.java]
 
         binding.rcView.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,true)
             articleAdapter = ArticleAdapter()
             adapter = articleAdapter
             isVisible = true
@@ -92,7 +93,7 @@ class ArticleFragment : Fragment() {
             alertDialog.show()
 
             dialogUpdateBtn.setOnClickListener {
-                if (etTitleDialog.text!!.isNotEmpty() || etDescDialog.text!!.isNotEmpty()) {
+                if (etTitleDialog.text!!.isNotEmpty() && etDescDialog.text!!.isNotEmpty()) {
                     val id = article.id
                     val etTitle = etTitleDialog.text
                     val etDesc = etDescDialog.text
@@ -105,6 +106,9 @@ class ArticleFragment : Fragment() {
                         .show()
                     realmViewModel.getArticle()
                     alertDialog.dismiss()
+                } else {
+                    Toast.makeText(requireContext(), "fields are required", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
