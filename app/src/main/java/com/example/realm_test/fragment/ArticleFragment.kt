@@ -48,10 +48,13 @@ class ArticleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         realmViewModel = ViewModelProvider(this)[RealmViewModel::class.java]
-        binding.rcView.layoutManager = LinearLayoutManager(context)
-        articleAdapter = ArticleAdapter()
-        binding.rcView.adapter = articleAdapter
-        binding.rcView.isVisible = true
+
+        binding.rcView.apply {
+            layoutManager = LinearLayoutManager(context)
+            articleAdapter = ArticleAdapter()
+            adapter = articleAdapter
+            isVisible = true
+        }
 
         realmViewModel.realmLiveData.observe(viewLifecycleOwner) { articles ->
             articleAdapter.differ.submitList(articles)
@@ -60,21 +63,18 @@ class ArticleFragment : Fragment() {
         binding.saveBtn.setOnClickListener {
             val etTitle = binding.etTitle.text
             val etDesc = binding.etDesc.text
-            if (etTitle!!.isNotEmpty() || etDesc!!.isNotEmpty()) {
-                if (etTitle.isNotEmpty() && etDesc!!.isNotEmpty()) {
-                    realmViewModel.addArticle(title = etTitle.toString(), desc = etDesc.toString())
-                    realmViewModel.getArticle()
-                    Toast.makeText(requireContext(), "Successfully Saved", Toast.LENGTH_SHORT)
-                        .show()
-                    binding.etTitle.text!!.clear()
-                    binding.etDesc.text!!.clear()
-
-                } else {
-                    Toast.makeText(requireContext(), "fields are required", Toast.LENGTH_SHORT)
-                        .show()
-                }
+            if (etTitle!!.isNotEmpty() && etDesc!!.isNotEmpty()) {
+                realmViewModel.addArticle(title = etTitle.toString(), desc = etDesc.toString())
+                realmViewModel.getArticle()
+                Toast.makeText(requireContext(), "Successfully Saved", Toast.LENGTH_SHORT)
+                    .show()
+                etTitle.clear()
+                etDesc.clear()
+                binding.etTitle.clearFocus()
+                binding.etDesc.clearFocus()
             } else {
-                Toast.makeText(requireContext(), "fields are required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "fields are required", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -107,7 +107,6 @@ class ArticleFragment : Fragment() {
                     alertDialog.dismiss()
                 }
             }
-
         }
 
         articleAdapter.onDeleteClick = { article ->
@@ -130,8 +129,6 @@ class ArticleFragment : Fragment() {
             }
             dialog.create().show()
         }
-
-
     }
 
 }

@@ -32,8 +32,7 @@
                 android:layout_marginTop="18dp"
                 android:hint="Title"
                 android:letterSpacing="0.08"
-
-                android:textColor="@color/black"
+                android:textColor="#454545"
                 android:textColorHint="#8A8A8A"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -47,7 +46,7 @@
                 android:layout_marginTop="74dp"
                 android:hint="Description"
                 android:letterSpacing="0.08"
-                android:textColor="@color/black"
+                android:textColor="#454545"
                 android:textColorHint="#8A8A8A"
                 android:textSize="16sp"
                 android:textStyle="bold"
