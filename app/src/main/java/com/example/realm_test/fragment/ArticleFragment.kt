@@ -2,12 +2,13 @@ package com.example.realm_test.fragment
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -47,11 +48,10 @@ class ArticleFragment : Fragment() {
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         realmViewModel = ViewModelProvider(this)[RealmViewModel::class.java]
 
         binding.rcView.apply {
-            layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,true)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
             articleAdapter = ArticleAdapter()
             adapter = articleAdapter
             isVisible = true
@@ -64,9 +64,23 @@ class ArticleFragment : Fragment() {
         binding.saveBtn.setOnClickListener {
             val etTitle = binding.etTitle.text
             val etDesc = binding.etDesc.text
+
+            if (etTitle.isNullOrEmpty()) {
+                binding.titleLayout.error = "required"
+                binding.titleLayout.requestFocus()
+            } else {
+                binding.titleLayout.error = null
+            }
+            if (etDesc.isNullOrEmpty()) {
+                binding.descLayout.error = "required"
+            } else {
+                binding.descLayout.error = null
+            }
             if (etTitle!!.isNotEmpty() && etDesc!!.isNotEmpty()) {
                 realmViewModel.addArticle(title = etTitle.toString(), desc = etDesc.toString())
                 realmViewModel.getArticle()
+                binding.etTitle.error = null
+                binding.etDesc.error = null
                 Toast.makeText(requireContext(), "Successfully Saved", Toast.LENGTH_SHORT)
                     .show()
                 etTitle.clear()
@@ -78,6 +92,28 @@ class ArticleFragment : Fragment() {
                     .show()
             }
         }
+
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                val etTitle = binding.etTitle.text.toString()
+                val etDesc = binding.etDesc.text.toString()
+                if (etTitle.isNotEmpty()) {
+                    binding.titleLayout.error = null
+                }
+                if (etDesc.isNotEmpty()) {
+                    binding.descLayout.error = null
+                }
+            }
+
+        }
+        binding.etTitle.addTextChangedListener(textWatcher)
+        binding.etDesc.addTextChangedListener(textWatcher)
 
         articleAdapter.onUpdateClick = { article ->
             val dialogView = LayoutInflater.from(context).inflate(R.layout.update_dialog_box, null)
