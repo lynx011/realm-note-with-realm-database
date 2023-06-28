@@ -1,2 +1,2 @@
-# realm-note_with_realm-mongoDB
-[![Realm Note](https://skills.thijs.gg/icons?i=kotlin,realm)](https://skills.thijs.gg)
+# realm-note
+[![Realm Note](https://skillicons.dev/icons?i=kotlin)](https://skillicons.dev)
